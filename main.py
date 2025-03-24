@@ -1,12 +1,14 @@
-from window import *
+from graphics import *
 from tkinter import Tk, BOTH, Canvas
 
 
 def main():
     win = Window(800, 600)
-    win.draw_line(Line(Point(10, 10), Point(100, 100)), "red")
-    win.draw_line(Line(Point(10, 100), Point(100, 10)), "blue")
-    win.draw_line (Line(Point(500, 10), Point(10, 100)), "green")
+    c1 = Cell(win)
+    c1.draw(0, 0, 100, 100)
+    c2 = Cell(win)
+    c2.draw(100, 0, 200, 100)
+    c1.draw_move(c2)
     win.wait_for_close()
 
 main()
