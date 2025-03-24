@@ -73,3 +73,37 @@ class Cell:
         center = Point((self._x1 + self._x2) // 2, (self._y1 + self._y2) // 2)
         to_cell_center = Point((to_cell._x1 + to_cell._x2) // 2, (to_cell._y1 + to_cell._y2) // 2)
         self._win.draw_line(Line(center, to_cell_center), "red" if not undo else "grey")
+
+class Maze:
+    def __init__(
+        self,
+        x1,
+        y1,
+        num_rows,
+        num_cols,
+        cell_size_x,
+        cell_size_y,
+        win,
+    ):
+        self.x1 = x1
+        self.y1 = y1
+        self.num_rows = num_rows
+        self.num_cols = num_cols
+        self.cell_size_x = cell_size_x
+        self.cell_size_y = cell_size_y
+        self.win = win
+        self._create_cells()
+    
+    def _create_cells(self):
+        self._cells = []
+        for row in self.num_rows:
+            self._cells.append([])
+            for col in self.num_cols:
+                self._cells[row].append(Cell(self.win))
+        for i in self._cells:
+            for j in self._cells[i]:
+                self.cells[i][j]._draw_cell(i,j)
+    
+    def _draw_cells(self, i, j):
+        cellx1 = i * self.cell_size_x
+

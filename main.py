@@ -10,5 +10,6 @@ def main():
     c2.draw(100, 0, 200, 100)
     c1.draw_move(c2)
     win.wait_for_close()
+    
 
 main()
