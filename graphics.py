@@ -1,3 +1,4 @@
+import time
 from tkinter import Tk, BOTH, Canvas
 
 class Window:
@@ -43,7 +44,7 @@ class Line:
         )
 
 class Cell:
-    def __init__(self, win):
+    def __init__(self, win=None):
         self.has_left_wall = True
         self.has_top_wall = True
         self.has_right_wall = True
@@ -55,6 +56,8 @@ class Cell:
         self._win = win
 
     def draw(self, x1, y1, x2, y2):
+        if self._win is None:
+            return
         self._x1 = x1
         self._x2 = x2
         self._y1 = y1
@@ -62,8 +65,12 @@ class Cell:
 
         if self.has_right_wall:
             self._win.draw_line(Line(Point(x2, y1), Point(x2, y2)), "black")
+        else:
+            self._win.draw_line(Line(Point(x2, y1), Point(x2, y2)), "white")
         if self.has_left_wall:
             self._win.draw_line(Line(Point(x1, y1), Point(x1, y2)), "black")
+        else:
+            self._win.draw_line(Line(Point(x1, y1), Point(x1, y2)), "white")      
         if self.has_top_wall:
             self._win.draw_line(Line(Point(x1, y1), Point(x2, y1)), "black")
         if self.has_bottom_wall:
@@ -83,7 +90,7 @@ class Maze:
         num_cols,
         cell_size_x,
         cell_size_y,
-        win,
+        win=None,
     ):
         self.x1 = x1
         self.y1 = y1
@@ -92,18 +99,39 @@ class Maze:
         self.cell_size_x = cell_size_x
         self.cell_size_y = cell_size_y
         self.win = win
+        self._cells = []
         self._create_cells()
+
     
     def _create_cells(self):
-        self._cells = []
-        for row in self.num_rows:
-            self._cells.append([])
-            for col in self.num_cols:
-                self._cells[row].append(Cell(self.win))
-        for i in self._cells:
-            for j in self._cells[i]:
-                self.cells[i][j]._draw_cell(i,j)
+        for i in range(self.num_cols):
+            col_cells = []
+            for j in range(self.num_rows):
+                col_cells.append(Cell(self.win))
+            self._cells.append(col_cells)
+        for i in range(self.num_cols):
+            for j in range(self.num_rows):
+                self._draw_cells(i,j)
     
     def _draw_cells(self, i, j):
-        cellx1 = i * self.cell_size_x
+        cell = self._cells[i][j]
+        cellx1 = self.x1 + (j * self.cell_size_x)
+        cellx2 = self.x1 + (j * self.cell_size_x) + self.cell_size_x
+        celly1 = self.y1 + (i * self.cell_size_y)
+        celly2 = self.y1 + (i * self.cell_size_y) + self.cell_size_y
+        cell.draw(cellx1, celly1, cellx2, celly2)
+        self._animate()
 
+    def _animate(self):
+        if self.win is None:
+            return
+        self.win.redraw()
+        time.sleep(0.05)
+
+    def _break_entrance_and_exit(self):
+        entrance = self._cells[0][0]
+        exit = self._cells[self.num_cols - 1][self.num_cols - 1]
+        entrance.has_left_wall = False
+        exit.has_right_wall = False
+        self._draw_cells(0, 0)
+        self._draw_cells(self.num_cols -1, self.num_rows -1)

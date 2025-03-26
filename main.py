@@ -3,12 +3,11 @@ from tkinter import Tk, BOTH, Canvas
 
 
 def main():
+    num_cols = 12
+    num_rows = 12
     win = Window(800, 600)
-    c1 = Cell(win)
-    c1.draw(0, 0, 100, 100)
-    c2 = Cell(win)
-    c2.draw(100, 0, 200, 100)
-    c1.draw_move(c2)
+    m1 = Maze(200, 200, num_rows, num_cols, 20, 20, win)
+    
     win.wait_for_close()
     
 
