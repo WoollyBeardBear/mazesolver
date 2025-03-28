@@ -1,4 +1,5 @@
 from graphics import *
+from maze import *
 from tkinter import Tk, BOTH, Canvas
 
 
