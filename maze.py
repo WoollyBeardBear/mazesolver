@@ -104,3 +104,68 @@ class Maze:
         for col in self._cells:
             for cell in col: 
                 cell.visited = False
+    
+    def solve(self):
+        return self._solve_r(0, 0)
+    
+    def _solve_r(self, i, j):
+        print(f"cell {i} {j}")
+        self._animate()
+        self._cells[i][j].visited = True
+        if i == self.num_cols - 1 and j == self.num_rows - 1:
+            return True
+        
+        directions = [(1, 0), (-1, 0), (0, 1), (0, -1)]
+
+        for di, dj in directions:
+            print(f"testing {di}, {dj}")
+            if di == 1 and not self._cells[i][j].has_right_wall:
+                ni = i + di
+                if i < self.num_cols:
+                    print(f"drawing move {ni}, {j}")
+                    self._cells[i][j].draw_move(self._cells[ni][j], j)
+                    result = self._solve_r(ni, j)
+                    if result == True:
+                        return True
+                    else:
+                        self._cells[i][j].draw_move(self._cells[ni][j], True)
+            elif di == -1 and not self._cells[i][j].has_left_wall:
+                ni = i + di
+                if i > 0:
+                    print(f"drawing move {ni}, {j}")
+                    self._cells[i][j].draw_move(self._cells[ni][j])
+                    result = self._solve_r(ni, j)
+                    if result == True:
+                        return True
+                    else:
+                        self._cells[i][j].draw_move(self._cells[ni][j], True)
+            elif dj == 1 and not self._cells[i][j].has_top_wall:
+                nj = j + dj
+                if j > 0:
+                    print(f"drawing move {i}, {nj}")
+                    self._cells[i][j].draw_move()
+                    result = self._solve_r(self._cells[i][nj])
+                    if result == True:
+                        return True
+                    else:
+                        self._cells[i][j].draw_move(self._cells[i][nj], True)
+            elif dj == -1 and not self._cells[i][j].has_bottom_wall:
+                nj = j + dj
+                if j < self.num_rows:
+                    print(f"drawing move {i}, {j}")
+                    self._cells[i][j].draw_move(self._cells[i][nj])
+                    result = self._solve_r(i, nj)
+                    if result == True:
+                        return True
+                    else:
+                        self._cells[i][j].draw_move(self._cells[i][nj], True)
+            print(f"not {di} {dj}")
+        print("False")
+        return False
+
+            
+        
+
+        
+
+    
